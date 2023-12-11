@@ -1,31 +1,42 @@
 package com.wngud.compose1
 
-fun main() {
-    val amanda = Person("Amanda", 33, "play tennis", null)
-    val atiqah = Person("Atiqah", 28, "climb", amanda)
+open class Phone(var isScreenLightOn: Boolean = false) {
+    open fun switchOn() {
+        isScreenLightOn = true
+    }
 
-    amanda.showProfile()
-    atiqah.showProfile()
+    fun switchOff() {
+        isScreenLightOn = false
+    }
+
+    fun checkPhoneScreenLight() {
+        val phoneScreenLight = if (isScreenLightOn) "on" else "off"
+        println("The phone screen's light is $phoneScreenLight.")
+    }
 }
 
-class Person(val name: String, val age: Int, val hobby: String?, val referrer: Person?) {
-    fun showProfile() {
-        // Fill in code
-        println("""
-            Name: $name
-            Age: $age
-        """.trimIndent())
-        if(hobby != null) print("Likes to $hobby. ")
-        if(referrer != null) {
-            print("Has a referrer named ${referrer.name}")
-            if(referrer.hobby != null) {
-                print(", who likes to ${referrer.hobby}.")
-            } else {
-                print(".")
-            }
-        } else {
-            print("Doesn't have a referrer.")
+class FoldablePhone(var isFolded: Boolean = true): Phone(){
+    override fun switchOn(){
+        if (!isFolded) {
+            isScreenLightOn = true
         }
-        print("\n\n")
     }
+
+    fun fold() {
+        isFolded = true
+    }
+
+    fun unfold() {
+        isFolded = false
+    }
+}
+
+fun main() {
+    val phone = FoldablePhone()
+
+    phone.switchOn()
+    phone.checkPhoneScreenLight()
+    phone.unfold()
+    phone.switchOn()
+    phone.checkPhoneScreenLight()
 }
