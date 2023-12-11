@@ -1,19 +1,18 @@
 package com.wngud.compose1
 
 fun main() {
-    // Fill in the code.
-    printFinalTemperature(27.0, "Celsius", "Fahrenheit") { 9.0 / 5.0 * it + 32 }
-    printFinalTemperature(350.0, "Kelvin", "Celsius") { it - 273.15 }
-    printFinalTemperature(10.0, "Fahrenheit", "Kelvin") { 5.0 / 9.0 * (it - 32) + 273.15 }
+    val brunoSong = Song("We Don't Talk About Bruno", "Encanto Cast", 2022, 1_000_000)
+    brunoSong.printDescription()
+    println(brunoSong.isPopular)
 }
 
-fun printFinalTemperature(
-    initialMeasurement: Double,
-    initialUnit: String,
-    finalUnit: String,
-    conversionFormula: (Double) -> Double
+class Song(
+    val title: String, val artist: String, val year: Int, val playCount: Int
 ) {
-    val finalMeasurement =
-        String.format("%.2f", conversionFormula(initialMeasurement)) // two decimal places
-    println("$initialMeasurement degrees $initialUnit is $finalMeasurement degrees $finalUnit.")
+    val isPopular: Boolean
+        get() = playCount >= 1000
+
+    fun printDescription() {
+        println("$title, $artist, $year")
+    }
 }
