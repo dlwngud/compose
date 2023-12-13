@@ -16,3 +16,4 @@ rootProject.name = "compose1"
 include ':app'
 include ':diceroller'
 include ':lemonade'
+include ':tiptime'
