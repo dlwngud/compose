@@ -25,4 +25,9 @@ fun main(){
 
     val shortEventCount = events.filter { it.durationInMinutes<60 }.count()
     println("${shortEventCount}개의 짧은 이벤트가 있음")
+
+    val groupEvents = events.groupBy { it.daypart }
+    groupEvents.forEach{
+        println("${it.key}: ${it.value.size} events")
+    }
 }
