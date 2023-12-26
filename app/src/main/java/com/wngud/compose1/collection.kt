@@ -30,4 +30,6 @@ fun main(){
     groupEvents.forEach{
         println("${it.key}: ${it.value.size} events")
     }
+
+    println("Last event of the day: ${events.last().title}")
 }
