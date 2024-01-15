@@ -63,9 +63,12 @@ fun GameScreen(
         )
 
         GameLayout(
-            onUserGuessChanged = { gameViewModel.updateUserGuess(it) },
+            onUserGuessChanged = {
+                gameViewModel.updateUserGuess(it)
+            },
+            isGuessWrong = gameUiState.isGuessedWordWrong,
             userGuess = gameViewModel.userGuess,
-            onKeyboardDone = { },
+            onKeyboardDone = { gameViewModel.checkUserGuess() },
             currentScrambledWord = gameUiState.currentScrambledWord,
             modifier = Modifier
                 .fillMaxWidth()
@@ -80,23 +83,19 @@ fun GameScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { }
-            ) {
+            Button(modifier = Modifier.fillMaxWidth(), onClick = {
+                gameViewModel.checkUserGuess()
+            }) {
                 Text(
-                    text = stringResource(R.string.submit),
-                    fontSize = 16.sp
+                    text = stringResource(R.string.submit), fontSize = 16.sp
                 )
             }
 
             OutlinedButton(
-                onClick = { },
-                modifier = Modifier.fillMaxWidth()
+                onClick = { }, modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = stringResource(R.string.skip),
-                    fontSize = 16.sp
+                    text = stringResource(R.string.skip), fontSize = 16.sp
                 )
             }
         }
@@ -122,6 +121,7 @@ fun GameStatus(score: Int, modifier: Modifier = Modifier) {
 @Composable
 fun GameLayout(
     onUserGuessChanged: (String) -> Unit,
+    isGuessWrong: Boolean,
     userGuess: String,
     onKeyboardDone: () -> Unit,
     currentScrambledWord: String,
@@ -130,8 +130,7 @@ fun GameLayout(
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
     Card(
-        modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+        modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(mediumPadding),
@@ -173,14 +172,18 @@ fun GameLayout(
 //                    disabledContainerColor = colorScheme.surface,
 //                ),
                 onValueChange = onUserGuessChanged,
-                label = { Text(stringResource(R.string.enter_your_word)) },
-                isError = false,
+                label = {
+                    if (isGuessWrong) {
+                        Text(stringResource(R.string.wrong_guess))
+                    } else {
+                        Text(stringResource(R.string.enter_your_word))
+                    }
+                },
+                isError = isGuessWrong,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),
-                keyboardActions = KeyboardActions(
-                    onDone = { onKeyboardDone() }
-                )
+                keyboardActions = KeyboardActions(onDone = { onKeyboardDone() })
             )
         }
     }
@@ -191,27 +194,22 @@ fun GameLayout(
  */
 @Composable
 private fun FinalScoreDialog(
-    score: Int,
-    onPlayAgain: () -> Unit,
-    modifier: Modifier = Modifier
+    score: Int, onPlayAgain: () -> Unit, modifier: Modifier = Modifier
 ) {
     val activity = (LocalContext.current as Activity)
 
-    AlertDialog(
-        onDismissRequest = {
-            // Dismiss the dialog when the user clicks outside the dialog or on the back
-            // button. If you want to disable that functionality, simply use an empty
-            // onCloseRequest.
-        },
+    AlertDialog(onDismissRequest = {
+        // Dismiss the dialog when the user clicks outside the dialog or on the back
+        // button. If you want to disable that functionality, simply use an empty
+        // onCloseRequest.
+    },
         title = { Text(text = stringResource(R.string.congratulations)) },
         text = { Text(text = stringResource(R.string.you_scored, score)) },
         modifier = modifier,
         dismissButton = {
-            TextButton(
-                onClick = {
-                    activity.finish()
-                }
-            ) {
+            TextButton(onClick = {
+                activity.finish()
+            }) {
                 Text(text = stringResource(R.string.exit))
             }
         },
@@ -219,8 +217,7 @@ private fun FinalScoreDialog(
             TextButton(onClick = onPlayAgain) {
                 Text(text = stringResource(R.string.play_again))
             }
-        }
-    )
+        })
 }
 
 @Preview(showBackground = true)
