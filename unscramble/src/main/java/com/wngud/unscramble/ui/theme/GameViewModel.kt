@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.wngud.unscramble.data.MAX_NO_OF_WORDS
 import com.wngud.unscramble.data.SCORE_INCREASE
 import com.wngud.unscramble.data.allWords
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,14 +70,26 @@ class GameViewModel : ViewModel() {
     }
 
     private fun updateGameState(updatedScore: Int) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                isGuessedWordWrong = false,
-                currentScrambledWord = pickRandomWordAndShuffle(),
-                score = updatedScore,
-                // inc()는 Integer 클래스의 메서드로, 정수 값을 1 증가시키는 역할
-                currentWordCount = currentState.currentWordCount.inc()
-            )
+        if (usedWords.size == MAX_NO_OF_WORDS){
+            //Last round in the game
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isGuessedWordWrong = false,
+                    score = updatedScore,
+                    isGameOver = true
+                )
+            }
+        } else{
+            // Normal round in the game
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isGuessedWordWrong = false,
+                    currentScrambledWord = pickRandomWordAndShuffle(),
+                    // inc()는 Integer 클래스의 메서드로, 정수 값을 1 증가시키는 역할
+                    currentWordCount = currentState.currentWordCount.inc(),
+                    score = updatedScore
+                )
+            }
         }
     }
 
