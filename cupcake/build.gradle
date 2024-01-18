@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace 'com.wngud.compose1'
-    compileSdk 33
+    namespace 'com.wngud.cupcake'
+    compileSdk 34
 
     defaultConfig {
-        applicationId "com.wngud.compose1"
+        applicationId "com.wngud.cupcake"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -77,6 +77,4 @@ dependencies {
 
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     debugImplementation("androidx.compose.ui:ui-tooling")
-
-
 }
